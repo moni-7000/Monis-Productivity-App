@@ -5,9 +5,11 @@ def showFrame(frame):
     
 #this makes the window i think
 root = ctk.CTk()
-root.title("MoniMode")
-root.geometry("500x530+900+300")
+root.title("Moni's Productivity App")
+root.geometry("500x600+900+300")
 
+
+#set theme
 ctk.set_default_color_theme("themes/theme.json")
 ctk.set_appearance_mode("light")
 
@@ -15,35 +17,108 @@ ctk.set_appearance_mode("light")
 root.grid_rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 
+
+#create all frames that will be used
 #use grid to allow overlapping, nsew to cover whole window
 start_frame = ctk.CTkFrame(root)
 start_frame.grid(row=0, column=0, sticky="nsew")
+
 main_menu_frame = ctk.CTkFrame(root)
 main_menu_frame.grid(row=0, column=0, sticky="nsew")
+
+calculator_frame = ctk.CTkFrame(root)
+calculator_frame.grid(row=0, column=0, sticky="nsew")
+
+todo_frame = ctk.CTkFrame(root)
+todo_frame.grid(row=0, column=0, sticky="nsew")
+
+timer_frame = ctk.CTkFrame(root)
+timer_frame.grid(row=0, column=0, sticky="nsew")
     
     
 #make the custom fonts to reuse 
-titleFont = ctk.CTkFont(family="Times", size=23, weight="bold")
+titleFont = ctk.CTkFont(family="Times", size=27, weight="bold")
 bodyFont = ctk.CTkFont(family="Times", size=15)
 
-#pack stuff onto start frame
+
 showFrame(start_frame)
-startLabel = ctk.CTkLabel(start_frame, text="   Welcome to moniMode!!!! :3   ", font=titleFont)
-startLabel.pack(pady=100)
-startButton = ctk.CTkButton(start_frame, command=main_menu_frame.tkraise, text=" Click to start! ", font=bodyFont)
-startButton.pack()
-authorLabel = ctk.CTkLabel(start_frame, text=" created by moni_7000 ! ", font=("Times", 12))
-authorLabel.pack(pady=60)
+#use a center frame to keep centered as window size changes
+start_center_frame = ctk.CTkFrame(start_frame, fg_color="transparent", border_width=0)
+start_center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+#pack stuff onto center frame
+startLabel = ctk.CTkLabel(start_center_frame, text="     Welcome to Moni's     \n     Productivity App!!      ", font=titleFont)
+startLabel.pack(pady=40)
+startButton = ctk.CTkButton(start_center_frame, command=main_menu_frame.tkraise, text=" Click to start! ", font=bodyFont)
+startButton.pack(pady=30)
+authorLabel = ctk.CTkLabel(start_center_frame, text=" created by moni_7000 ! ", font=("Times", 12))
+authorLabel.pack(pady=30)
+
+
+#use another center frame so menu is centered
+main_center_frame = ctk.CTkFrame(main_menu_frame, fg_color="transparent", border_width=0)
+main_center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
 #pack stuff on main menu 
-menuLabel = ctk.CTkLabel(main_menu_frame, text="   MAIN MENU   ", font=titleFont)
-menuLabel.pack(pady=100)
-calcButton = ctk.CTkButton(main_menu_frame, text="♡  CALCULATOR ♡", font=bodyFont)
+menuLabel = ctk.CTkLabel(main_center_frame, text="   MAIN MENU   ", font=titleFont)
+menuLabel.pack(pady=60)
+calcButton = ctk.CTkButton(main_center_frame, text="♡  CALCULATOR ♡", command=calculator_frame.tkraise, font=bodyFont)
 calcButton.pack()
-todoButton = ctk.CTkButton(main_menu_frame, text="♡  TO-DO LIST  ♡", font=bodyFont)
-todoButton.pack(pady=30)
-focusButton = ctk.CTkButton(main_menu_frame, text="♡  FOCUS TIMER  ♡", font=bodyFont)
+todoButton = ctk.CTkButton(main_center_frame, text="♡  TO-DO LIST  ♡", command=todo_frame.tkraise, font=bodyFont)
+todoButton.pack(pady=50)
+focusButton = ctk.CTkButton(main_center_frame, text="♡  FOCUS TIMER  ♡", command=timer_frame.tkraise, font=bodyFont)
 focusButton.pack()
+
+#create and place all the center frames
+calc_center_frame = ctk.CTkFrame(calculator_frame, fg_color="#ffb0c0", border_width=3)
+calc_center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+todo_center_frame = ctk.CTkFrame(todo_frame, fg_color="transparent", border_width=0)
+todo_center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+timer_center_frame = ctk.CTkFrame(timer_frame, fg_color="transparent", border_width=0)
+timer_center_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+#Now create the calculator display
+
+entry=""
+#backButton1=ctk.CTkButton(calc_center_frame, text="BACK", command=main_menu_frame.tkraise)
+calc_entry = ctk.CTkEntry(calc_center_frame, width=180, textvariable=entry, justify="right")
+calc_entry.grid(row=1, column=0, columnspan=3)
+
+delete_button = ctk.CTkButton(calc_center_frame, width=50, text="<<")
+delete_button.grid(row=1, column=3)
+
+calc_label = ctk.CTkLabel(calc_center_frame, text="♡  CALCULATOR  ♡", font=("Times", 23,"bold"))
+calc_label.grid(row=0, columnspan=4, pady=20)
+
+buttonsxy = [(5,0,0), (5,1,"."), (5,2,"-"), (5,3,"="),
+             (4,0,1), (4,1,2), (4,2,3), (4,3,"+"),
+             (3,0,4), (3,1,5), (3,2,6), (3,3,"X"),
+             (2,0,7), (2,1,8), (2,2,9), (2,3,"-"),
+             ]
+
+buttonList =[]
+
+for b_row, b_col, val in buttonsxy:
+    myButton = ctk.CTkButton(calc_center_frame, width=50, text=val)
+    myButton.grid(row=b_row, column=b_col, padx=7, pady=13)
+    buttonList.append(myButton)
+
+
+
+#grid stuff onto todo list center frame
+testLabel2= ctk.CTkLabel(todo_center_frame, text="todo frame test")
+testLabel2.pack()
+backButton2=ctk.CTkButton(todo_center_frame, text="BACK", command=main_menu_frame.tkraise)
+backButton2.pack(pady=10)
+
+#grid stuff onto focus timer center frame
+testLabel3= ctk.CTkLabel(timer_center_frame, text="timer frame test")
+testLabel3.pack()
+backButton3=ctk.CTkButton(timer_center_frame, text="BACK", command=main_menu_frame.tkraise)
+backButton3.pack(pady=10)
+
 
 
 root.mainloop()

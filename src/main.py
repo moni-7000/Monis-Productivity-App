@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import textwrap
-import time
+import time 
 
 def showFrame(frame):
     frame.tkraise()

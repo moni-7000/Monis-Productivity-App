@@ -101,17 +101,29 @@ buttonsxy = [(5,0,0), (5,1,"."), (5,2,"/"), (5,3,"="),
              (2,0,7), (2,1,8), (2,2,9), (2,3,"-"),
              ]
 
-
+negative = False
 #Where val is the button the user pressed
 #Complete the appropriate operation
 def calculate(val):
-    
+    global negative
     operators = ["/", "+", "-", "*"]
     
         
     if(val in operators or val == "."):
+        
         if ((calc_entry.get() == "") or (calc_entry.get()[-1] in operators)):
-            pass    
+            
+            if (val == "-"):
+                if (calc_entry.get() == ""):
+                    calc_entry.configure(state="normal")
+                    calc_entry.insert("end", str(val))
+                    calc_entry.configure(state="disabled")
+                elif (calc_entry.get()[-1] in operators):
+                    if not negative:
+                        calc_entry.configure(state="normal")
+                        calc_entry.insert("end", str(val))
+                        calc_entry.configure(state="disabled")
+                        negative = True  
         elif(val == "."):
             text = calc_entry.get()
             
@@ -133,12 +145,31 @@ def calculate(val):
             calc_entry.configure(state="disabled")              
     else:
         if (val == "="):
+            
             result = calc_entry.get()
-            calc_entry.configure(state="normal")  
-            calc_entry.delete(0, "end")
-            calc_entry.insert(0, eval(result))
-            calc_entry.configure(state="disabled") 
+            
+            try:
+                answer = eval(calc_entry.get())
+                calc_entry.configure(state="normal")  
+                calc_entry.delete(0, "end")
+                calc_entry.insert(0, answer)
+                calc_entry.configure(state="disabled") 
+            except ZeroDivisionError:
+                calc_entry.configure(state="normal")  
+                calc_entry.delete(0, "end")
+                calc_entry.insert(0, "Cannot divide by zero!")
+                calc_entry.after(1000, lambda: (calc_entry.delete(0, "end"), calc_entry.configure(state="disabled")))
+            except Exception:
+                calc_entry.configure(state="normal")  
+                calc_entry.delete(0, "end")
+                calc_entry.insert(0,"Invallid expression!")
+                calc_entry.after(1000, lambda: (calc_entry.delete(0, "end"), calc_entry.configure(state="disabled")))
+            
         elif(val == "<<"):
+            if (calc_entry.get() != ""):
+                if calc_entry.get()[-1] == "-":
+                    negative = False
+                
             calc_entry.configure(state="normal")
             calc_entry.delete(len(calc_entry.get()) - 1)
             calc_entry.configure(state="disabled")     
@@ -146,6 +177,7 @@ def calculate(val):
             calc_entry.configure(state="normal")
             calc_entry.insert("end", str(val))
             calc_entry.configure(state="disabled")
+            negative = False
 
 
 def clearCalc():

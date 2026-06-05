@@ -10,7 +10,7 @@ class App(ctk.CTk):
         
         #set theme
         ctk.set_default_color_theme("themes/theme.json")
-        ctk.set_appearance_mode("light")
+        ctk.set_appearance_mode("dark")
         
         #allow window stretching
         self.grid_rowconfigure(0, weight=1)
@@ -30,7 +30,6 @@ class App(ctk.CTk):
         self.start_frame = StartScreen(self,self)
         self.start_frame.grid(row=0, column=0, sticky="nsew")
         
-
         self.calculator_frame = Calculator(self,self)
         self.calculator_frame.grid(row=0, column=0, sticky="nsew")
 
@@ -226,15 +225,17 @@ class TodoList(ctk.CTkFrame):
         todoLabel.pack(pady=20)
 
         #create a seperate task frame to hold tasks
-        self.taskFrame = ctk.CTkFrame(self.todo_center_frame, border_width=0, fg_color="#de6f92", width=300, height=200)
+        self.taskFrame = ctk.CTkScrollableFrame(self.todo_center_frame, border_width=0, fg_color="#de6f92", width=300, height=200)
         self.taskFrame.pack(pady=10)
+        
+        if ctk.get_appearance_mode() == "Dark":
+            self.taskFrame.configure(fg_color="#542134")
 
         #num of tasks at a given time
         self.taskCount = 0
+        self.maxTaskLen = 100
         #current row to add a new task (no overlapping)
         self.taskRow = 0
-        #maximum num of tasks
-        self.maxTasks = 5
         #the button that takes you to the frame to make the task
         self.gotoAddTaskButton = ctk.CTkButton(self.todo_center_frame, text=" ADD TASK", font=self.controller.bodyFont, command= lambda:self.controller.addTask_Frame.tkraise())
         self.gotoAddTaskButton.pack(pady=20)
@@ -242,7 +243,6 @@ class TodoList(ctk.CTkFrame):
         backButton3=ctk.CTkButton(self.todo_center_frame, text="BACK", command= lambda:self.controller.main_menu_frame.tkraise())
         backButton3.pack(pady=10)
         
-        self.stopTimer = False
         
     def taskRemoved(self):
         self.taskCount -= 1
@@ -251,18 +251,18 @@ class TodoList(ctk.CTkFrame):
     
         taskName = self.controller.addTask_Frame.taskEntry.get()
         #wrap text to sustain window format
-        wrappedTask = textwrap.fill(taskName, 30)
+        wrappedTask = textwrap.fill(taskName, 25)
     
-        if (taskName == "" or self.taskCount == self.maxTasks or len(taskName) > 75):
-            if (self.taskCount == self.maxTasks):
+        if (taskName == ""  or len(taskName) > 100):
+            if len(taskName) > 100:
                 self.controller.addTask_Frame.taskEntry.delete(0, "end")
-                self.controller.addTask_Frame.taskEntry.insert(0, "Maximum tasks reached!")
+                self.controller.addTask_Frame.taskEntry.insert(0, "Max length is 100 chars!")
                 self.controller.addTask_Frame.taskEntry.after(1000, lambda: self.controller.addTask_Frame.taskEntry.delete(0,"end"))
-            else:
+            else:   
                 self.controller.addTask_Frame.taskEntry.delete(0, "end")
                 self.controller.addTask_Frame.taskEntry.insert(0, "Invallid task!")
                 self.controller.addTask_Frame.taskEntry.after(1000, lambda: self.controller.addTask_Frame.taskEntry.delete(0,"end"))
-            return
+            
         else:
             self.controller.addTask_Frame.taskEntry.delete(0, "end")
     
@@ -286,7 +286,7 @@ class AddTaskScreen(ctk.CTkFrame):
         self.add_task_center_frame = ctk.CTkFrame(self, fg_color="transparent", border_width=0)
         self.add_task_center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        taskHelpLabel = ctk.CTkLabel(self.add_task_center_frame, text="♡ Tasks may be <= 75 characters!\n♡ The maximum # of tasks is 5!", font=("times", 23))
+        taskHelpLabel = ctk.CTkLabel(self.add_task_center_frame, text="\n♡    Create your tasks here! \n", font=("times", 20))
         taskHelpLabel.pack(pady=30)
 
         self.taskEntry = ctk.CTkEntry(self.add_task_center_frame, width=200, justify="right", state="normal")

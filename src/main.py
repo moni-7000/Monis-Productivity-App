@@ -68,7 +68,7 @@ class StartScreen(ctk.CTkFrame):
         self.start_center_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         #pack widgets onto center frame
-        startLabel = ctk.CTkLabel(self.start_center_frame, text="\n     Welcome to Moni's     \n     Productivity App!!      \n", font=self.controller.titleFont)
+        startLabel = ctk.CTkLabel(self.start_center_frame, text="\n     Welcome to Moni's     \n     Productivity App!       \n", font=self.controller.titleFont)
         startLabel.pack(pady=40)
         startButton = ctk.CTkButton(self.start_center_frame, command= lambda: (self.controller.main_menu_frame.tkraise(), self.controller.menu_click_sound.play()), text=" Click to start! ", font=("Times", 20), width=200)
         startButton.pack(pady=30)
@@ -107,6 +107,8 @@ class MainMenu(ctk.CTkFrame):
             ctk.set_appearance_mode("Dark")
             self.controller.todo_frame.taskFrame.configure(fg_color="#542134")
             self.controller.calculator_frame.calc_center_frame.configure(fg_color="#120f10")
+        
+        self.controller.basic_click_sound.play()
         
 
         

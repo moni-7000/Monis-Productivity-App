@@ -14,3 +14,7 @@ A simple pink/dark neon productivity app.
 - Custom Tkinter
 - Sqlite3
 - Pygame
+
+## Installation
+Simply install the executable and run to use!
+*Windows defender will likely flag this because it was made via pyinstaller and not digitally signed. Though, it is a false-positive.*

@@ -17,4 +17,4 @@ A simple pink/dark neon productivity app.
 
 ## Installation
 Simply install the executable and run to use!
-*Windows defender will likely flag this because it was made via pyinstaller and not digitally signed. Though, it is a false-positive.*
+- Note: *Windows defender will likely flag this because it was made via pyinstaller and not digitally signed. Though, it is a false-positive.*

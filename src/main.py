@@ -3,7 +3,18 @@ import textwrap
 import time
 import sqlite3 
 from database import todoDatabase
+import os
+import sys
 import pygame
+
+#allow pyinstaller path to audio files
+def resource_path(relative_path):
+    try: 
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+        
+    return os.path.join(base_path, relative_path)
 
 class App(ctk.CTk):
     def __init__(self):
@@ -16,11 +27,11 @@ class App(ctk.CTk):
         
         #create audio system
         pygame.mixer.init()
-        self.menu_click_sound = pygame.mixer.Sound("audio/menuShine.mp3")
-        self.basic_click_sound = pygame.mixer.Sound("audio/basicClick.mp3")
-        self.alarm_sound = pygame.mixer.Sound("audio/alarmShine.mp3")
+        self.menu_click_sound = pygame.mixer.Sound(resource_path("src/audio/menuShine.mp3"))
+        self.basic_click_sound = pygame.mixer.Sound(resource_path("src/audio/basicClick.mp3"))
+        self.alarm_sound = pygame.mixer.Sound(resource_path("src/audio/alarmShine.mp3"))
         #set theme
-        ctk.set_default_color_theme("themes/theme.json")
+        ctk.set_default_color_theme(resource_path("src/themes/theme.json"))
         
         #allow window stretching
         self.grid_rowconfigure(0, weight=1)
@@ -136,7 +147,7 @@ class Calculator(ctk.CTkFrame):
         
         self.makeButtons()
         
-        delete_button = ctk.CTkButton(self.calc_center_frame, width=50, text="<<", command=lambda: self.calculate("<<"))
+        delete_button = ctk.CTkButton(self.calc_center_frame, width=50, text="<<", command=lambda: (self.calculate("<<"), self.controller.basic_click_sound.play()))
         delete_button.grid(row=1, column=3)
 
         calc_label = ctk.CTkLabel(self.calc_center_frame, text="♡  CALCULATOR  ♡", font=("Times", 23,"bold"))
@@ -146,10 +157,10 @@ class Calculator(ctk.CTkFrame):
     def makeButtons(self):
         #Use a loop to create each button on the calculator
         for b_row, b_col, val in self.buttonsxy:
-            myButton = ctk.CTkButton(self.calc_center_frame, width=50, text=val, command=lambda v=val: self.calculate(v))
+            myButton = ctk.CTkButton(self.calc_center_frame, width=50, text=val, command=lambda v=val: (self.calculate(v), self.controller.basic_click_sound.play()))
             myButton.grid(row=b_row, column=b_col, padx=7, pady=13)
 
-        clearButton = ctk.CTkButton(self, text="CLEAR", command=self.clearCalc, width=100, border_width=0)
+        clearButton = ctk.CTkButton(self, text="CLEAR", command= lambda:(self.clearCalc(), self.controller.basic_click_sound.play()), width=100, border_width=0)
         clearButton.place(relx=0.5, rely=0.77, anchor="center")
 
         backButton1 = ctk.CTkButton(self, text="BACK", command= lambda:(self.controller.main_menu_frame.tkraise(), self.controller.basic_click_sound.play()))
@@ -269,7 +280,7 @@ class TodoList(ctk.CTkFrame):
         self.taskRow = 0
         
         #the button that takes you to the frame to make the task
-        self.gotoAddTaskButton = ctk.CTkButton(self.todo_center_frame, text=" ADD TASK", font=self.controller.bodyFont, command= lambda:self.controller.addTask_Frame.tkraise())
+        self.gotoAddTaskButton = ctk.CTkButton(self.todo_center_frame, text=" ADD TASK", font=self.controller.bodyFont, command= lambda:(self.controller.addTask_Frame.tkraise(), self.controller.basic_click_sound.play()))
         self.gotoAddTaskButton.pack(pady=20)
 
         backButton3=ctk.CTkButton(self.todo_center_frame, text="BACK", command= lambda:(self.controller.main_menu_frame.tkraise(), self.controller.basic_click_sound.play()))
@@ -363,7 +374,7 @@ class AddTaskScreen(ctk.CTkFrame):
         self.taskEntry.pack(pady=10)
 
         #button that makes the real task
-        createTaskButton = ctk.CTkButton(self.add_task_center_frame, text=" ADD TO TASK LIST ", command= lambda: self.controller.todo_frame.addTask())
+        createTaskButton = ctk.CTkButton(self.add_task_center_frame, text=" ADD TO TASK LIST ", command= lambda: (self.controller.todo_frame.addTask(), self.controller.basic_click_sound.play()))
         createTaskButton.pack(pady=30)
 
         backButton2=ctk.CTkButton(self.add_task_center_frame, text="BACK", command= lambda:(self.controller.main_menu_frame.tkraise(), self.controller.basic_click_sound.play()))
@@ -428,22 +439,22 @@ class FocusTimer(ctk.CTkFrame):
             
     def makeTimerButtons(self):
 
-        upMinButton = ctk.CTkButton(self.timerConfigureFrame, text= "+1 Min", command=self.addMin)
+        upMinButton = ctk.CTkButton(self.timerConfigureFrame, text= "+1 Min", command= lambda: (self.controller.basic_click_sound.play(), self.addMin()))
         upMinButton.grid(row=0, column=0, padx=10, pady=10)
 
-        downMinButton = ctk.CTkButton(self.timerConfigureFrame, text= "-1 Min", command=self.rmMin)
+        downMinButton = ctk.CTkButton(self.timerConfigureFrame, text= "-1 Min", command= lambda: (self.controller.basic_click_sound.play(), self.rmMin()))
         downMinButton.grid(row=0, column=1, padx=10, pady=10)
 
-        upHrButton = ctk.CTkButton(self.timerConfigureFrame, text="+1 Hr", command=self.addHr)
+        upHrButton = ctk.CTkButton(self.timerConfigureFrame, text="+1 Hr", command= lambda: (self.controller.basic_click_sound.play(), self.addHr()))
         upHrButton.grid(row=1, column=0, padx=10, pady=10)
 
-        downHrButton = ctk.CTkButton(self.timerConfigureFrame, text="-1 Hr", command=self.rmHr)
+        downHrButton = ctk.CTkButton(self.timerConfigureFrame, text="-1 Hr", command= lambda: (self.controller.basic_click_sound.play(), self.rmHr()))
         downHrButton.grid(row=1, column=1, padx=10, pady=10)
         
-        startTimerButton = ctk.CTkButton(self.timerConfigureFrame, text=" START ", command=self.startTimer, width=50)
+        startTimerButton = ctk.CTkButton(self.timerConfigureFrame, text=" START ", command= lambda:(self.controller.basic_click_sound.play(), self.startTimer()), width=50)
         startTimerButton.grid(row=2, column=0, columnspan=2,pady=10)
 
-        stopTimerButton = ctk.CTkButton(self.timerConfigureFrame, text=" STOP ", command=self.pressedStop, width=50)
+        stopTimerButton = ctk.CTkButton(self.timerConfigureFrame, text=" CLEAR ", command= lambda: (self.controller.basic_click_sound.play(), self.pressedStop()), width=50)
         stopTimerButton.grid(row=3, column=0, columnspan=2, pady=10)
 
         

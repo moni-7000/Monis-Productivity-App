@@ -7,7 +7,7 @@ import os
 import sys
 import pygame
 
-#allow pyinstaller path to audio files
+
 def resource_path(relative_path):
     try: 
         base_path = sys._MEIPASS
@@ -305,7 +305,7 @@ class TodoList(ctk.CTkFrame):
             newTask.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
     
             doneButton= ctk.CTkButton(rowFrame, text="✓", width = 20)
-            doneButton.configure(command= lambda t_id=task_id, frame=rowFrame: (self.db.remove_task(t_id), frame.destroy(), self.taskRemoved()))
+            doneButton.configure(command= lambda t_id=task_id, frame=rowFrame: (self.db.remove_task(t_id), frame.destroy(), self.taskRemoved(), self.controller.menu_click_sound.play()))
             doneButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
             self.taskRow += 1
@@ -351,7 +351,7 @@ class TodoList(ctk.CTkFrame):
             newTask.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
     
             doneButton= ctk.CTkButton(rowFrame, text="✓", width = 20)
-            doneButton.configure(command= lambda t_id=task_id, frame=rowFrame: (self.db.remove_task(t_id), frame.destroy(), self.taskRemoved()))
+            doneButton.configure(command= lambda t_id=task_id, frame=rowFrame: (self.db.remove_task(t_id), frame.destroy(), self.taskRemoved(), self.controller.menu_click_sound.play()))
             doneButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
             self.taskRow += 1
@@ -377,7 +377,7 @@ class AddTaskScreen(ctk.CTkFrame):
         createTaskButton = ctk.CTkButton(self.add_task_center_frame, text=" ADD TO TASK LIST ", command= lambda: (self.controller.todo_frame.addTask(), self.controller.basic_click_sound.play()))
         createTaskButton.pack(pady=30)
 
-        backButton2=ctk.CTkButton(self.add_task_center_frame, text="BACK", command= lambda:(self.controller.main_menu_frame.tkraise(), self.controller.basic_click_sound.play()))
+        backButton2=ctk.CTkButton(self.add_task_center_frame, text="BACK", command= lambda:(self.controller.todo_frame.tkraise(), self.controller.basic_click_sound.play()))
         backButton2.pack(pady=10)
     
                 
